@@ -1,8 +1,11 @@
+/* media.js: adds an optional photo or video to a gift (Little Surprise).
+   It builds its own upload box, live preview and receiver display. */
 (function () {
   "use strict";
 
-  var CLOUD_NAME = "mnjk6qu9";
-  var UPLOAD_PRESET = "little_surprise";
+
+  var CLOUD_NAME = "mnjk6qu9";      // example: "dab12cd3e"
+  var UPLOAD_PRESET = "little_surprise";   // an UNSIGNED upload preset, example: "little_surprise"
 
   var MAX_VIDEO_MB = 100, MAX_SECONDS = 60, MAX_SIDE = 1600;
   var $ = function (id) { return document.getElementById(id); };
@@ -10,6 +13,7 @@
   var SAFE = /^[iv]\/[\w\-.\/]{3,150}$/;
   var media = "", busy = false, localURL = "";
 
+  // Not set up yet: the site works exactly as before, with no upload box.
   if (!CLOUD_NAME || !UPLOAD_PRESET) {
     window.GiftMedia = { get: function () { return ""; }, clean: function () { return ""; }, show: function () {} };
     return;
@@ -24,6 +28,7 @@
     ".gm{margin:12px 0;padding:8px;background:#fff;border-radius:16px;box-shadow:0 8px 20px rgba(120,70,100,.18);transform:rotate(-1deg)}" +
     ".gm img,.gm video{display:block;width:100%;max-height:60vh;object-fit:contain;border-radius:10px;background:#fff}.gm video{background:#000}";
   document.head.appendChild(css);
+
 
   var box = document.createElement("div"), lab = document.createElement("label"), inp = document.createElement("input");
   var st = document.createElement("p"), pr = document.createElement("progress"), rm = document.createElement("button");
@@ -59,7 +64,7 @@
     fill(pv, "");
   }
 
-  // Photos: shrink to max 1600px JPEG (smaller upload, and the re-encode drops hidden location data)
+ 
   function shrink(file) {
     return createImageBitmap(file, { imageOrientation: "from-image" })
       .catch(function () { return createImageBitmap(file); })
