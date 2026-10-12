@@ -1,12 +1,8 @@
-/* media.js: adds an optional photo or video to a gift (Little Surprise).
-   It builds its own upload box, live preview and receiver display. */
 (function () {
   "use strict";
 
-  // ===== SETUP: paste your free Cloudinary details here (see MEDIA-SETUP.md) =====
-  var CLOUD_NAME = "";      // example: "dab12cd3e"
-  var UPLOAD_PRESET = "";   // an UNSIGNED upload preset, example: "little_surprise"
-  // ==============================================================================
+  var CLOUD_NAME = "mnjk6qu9";
+  var UPLOAD_PRESET = "little_surprise";
 
   var MAX_VIDEO_MB = 100, MAX_SECONDS = 60, MAX_SIDE = 1600;
   var $ = function (id) { return document.getElementById(id); };
@@ -14,7 +10,6 @@
   var SAFE = /^[iv]\/[\w\-.\/]{3,150}$/;
   var media = "", busy = false, localURL = "";
 
-  // Not set up yet: the site works exactly as before, with no upload box.
   if (!CLOUD_NAME || !UPLOAD_PRESET) {
     window.GiftMedia = { get: function () { return ""; }, clean: function () { return ""; }, show: function () {} };
     return;
@@ -30,7 +25,6 @@
     ".gm img,.gm video{display:block;width:100%;max-height:60vh;object-fit:contain;border-radius:10px;background:#fff}.gm video{background:#000}";
   document.head.appendChild(css);
 
-  // Upload box (inserted above "Your name")
   var box = document.createElement("div"), lab = document.createElement("label"), inp = document.createElement("input");
   var st = document.createElement("p"), pr = document.createElement("progress"), rm = document.createElement("button");
   box.className = "mup"; lab.className = "pick"; st.className = "st"; rm.className = "rm";
@@ -134,14 +128,12 @@
   };
   rm.onclick = reset;
 
-  // Don't let the gift be created while a file is still uploading
   $("form").addEventListener("submit", function (e) {
     if (!busy) return;
     e.preventDefault(); e.stopImmediatePropagation();
     $("err").textContent = "Hang on, your photo or video is still uploading.";
   }, true);
 
-  // The 3 hooks used by script.js
   window.GiftMedia = {
     get: function () { return media; },
     clean: function (p) { return typeof p === "string" && SAFE.test(p) && p.indexOf("..") < 0 ? p : ""; },
